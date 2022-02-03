@@ -21,7 +21,6 @@ public class UserValidator {
         if (userRepository.isLoginExists(newUser.getLogin())) {
             throw new LoginExistsException(newUser.getLogin());
         }
-
         validatePassword(newUser.getPassword());
     }
 
