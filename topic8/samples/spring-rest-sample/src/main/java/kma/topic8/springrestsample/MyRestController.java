@@ -20,7 +20,7 @@ public class MyRestController {
     private final ResponseGenerator responseGenerator;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseEntity<LoginResponseDto> login(
+    public ResponseEntity<LoginDto> login(
         @RequestBody final LoginDto loginDto,
         @RequestParam("requiredField") final String requiredField
     ) {
@@ -30,7 +30,7 @@ public class MyRestController {
         return ResponseEntity
             .status(HttpStatus.OK)
             .header(HttpHeaders.AUTHORIZATION, "generated-jwt-token")
-            .body(responseGenerator.doLogin(loginDto));
+            .body(loginDto);
     }
 
 }

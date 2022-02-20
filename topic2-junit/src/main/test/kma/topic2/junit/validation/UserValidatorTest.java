@@ -35,17 +35,7 @@ class UserValidatorTest {
                         .password("test")
                         .build());
     }
-    @ParameterizedTest(name = "login [{0}] password [{1}]")
-    @MethodSource("dataProvider")
-    void validateUserWithBadPassword(String login, String password) {
-        NewUser user = NewUser.builder()
-                .login(login)
-                .password(password)
-                .build();
-        assertThatThrownBy(() -> userValidator.validateNewUser(user))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessage("You have errors in you object");
-    }
+
     @Test
     void validateUserWithExistedLogin() {
         when(repository.isLoginExists(ArgumentMatchers.anyString())).thenReturn(true);
@@ -56,6 +46,18 @@ class UserValidatorTest {
                         .build()));
         assertNotNull(thrown.getMessage());
 
+    }
+
+    @ParameterizedTest(name = "login [{0}] password [{1}]")
+    @MethodSource("dataProvider")
+    void validateUserWithBadPassword(String login, String password) {
+        NewUser user = NewUser.builder()
+                .login(login)
+                .password(password)
+                .build();
+        assertThatThrownBy(() -> userValidator.validateNewUser(user))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("You have errors in you object");
     }
 
     private static Stream<org.junit.jupiter.params.provider.Arguments> dataProvider() {

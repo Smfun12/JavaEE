@@ -39,10 +39,7 @@ public class FormController {
             @RequestParam(name = "isbn") String isbn,
             @RequestParam(name = "title") String title,
             @RequestParam(name = "author") String author, Model model){
-        Book book = new Book();
-        book.setAuthor(author);
-        book.setIsbn(isbn);
-        book.setTitle(title);
+        Book book = Book.of(title,isbn,author);
         if (isbn.equals("") || author.equals("")||title.equals("")){
             model.addAttribute("errorText","Check book data");
             return "book-create";
