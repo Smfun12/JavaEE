@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Books</title>
+</head>
+<style>
+    #bookForm{
+        display: inline-block;
+    }
+    .box{
+        display: flex;
+        column-gap: 10%;
+        align-items: end;
+    }
+</style>
+<body>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+<h3>Books</h3>
+<div>
+    <div>
+        <input name="search" placeholder="title or isbn or author" id="searchBook"/>
+        <button id="findBook">Find a book</button>
+        <div>
+            <input type="radio" id="titleRadio" name="searchField" value="title"
+                   checked>
+            <label for="titleRadio">Title</label>
+        </div>
+        <div>
+            <input type="radio" id="authorRadio" name="searchField" value="author">
+            <label for="authorRadio">Author</label>
+        </div>
+        <div>
+            <input type="radio" id="isbnRadio" name="searchField" value="isbn">
+            <label for="isbnRadio">ISBN</label>
+        </div>
+    </div>
+<table>
+    <thead>
+    <th>Title</th>
+    <th>ISBN</th>
+    <th>Author</th>
+    </thead>
+    <tbody id="bookList">
+
+    </tbody>
+</table>
+</div>
+<div class="box">
+    <div id="addBookForm">
+        <h3>Book form</h3>
+        <form id="bookForm">
+            <input name="title" placeholder="title" id="title">
+            <input name="author" placeholder="author" id="author">
+            <input name="isbn" placeholder="isbn" id="isbn">
+            <button type="submit">Add book</button>
+        </form>
+        <button type="button" id="resetBooks" value="Refresh">Refresh</button>
+    </div>
+</div>
+<div>
+    <table>
+        <thead>
+        <th>Title</th>
+        <th>ISBN</th>
+        <th>Author</th>
+        </thead>
+        <tbody id="booksTable">
+
+        </tbody>
+    </table>
+
+</div>
+<script>
+    $(function(){
+        $('#bookForm').submit(function(e){
+            e.preventDefault();
+
+            $('#bookResponse').text('');
+            let title = $('#title').val();
+            let author = $('#author').val();
+            let isbn = $('#isbn').val();
+            $.ajax({
+                type: 'POST',
+                url: '/book/addBookRest',
+                dataType: 'json',
+                data: "title="+title + '&author='+author + '&isbn='+isbn,
+                success: function (response) {
+                    if (response) {
+                        let $booksTable = $('#booksTable');
+                        $booksTable.empty();
+
+                        $.ajax({
+                            url: '/book/getBooks',
+                            success: function (response) {
+                                response.forEach(function (book) {
+                                    $booksTable.append('<tr><td>' + book.title + '</td><td>' + book.isbn + '</td><td>' +
+                                        book.author + '</td></tr>');
+                                })
+                            }
+                        });
+                    }
+                }
+            });
+        });
+        $('#findBook').click(function (){
+            let value = $('#searchBook').val();
+            let searchField = $("input[type='radio']:checked").val();
+            let $bookList = $('#bookList');
+            $bookList.empty();
+            $.ajax({
+                url: '/book/books',
+                data: 'searchField='+searchField+'&value='+value,
+                success: function (response) {
+                    response.forEach(function (book) {
+                        $bookList.append('<tr><td>' + book.title + '</td><td>' + book.isbn + '</td><td>' +
+                            book.author + '</td></tr>');
+                    })
+                }
+            });
+        });
+        $("#resetBooks").click(function (){
+            let $booksTable = $('#booksTable');
+            $booksTable.empty();
+
+            $.ajax({
+                url: '/book/getBooks',
+                success: function (response) {
+                    response.forEach(function (book) {
+                        $booksTable.append('<tr><td>' + book.title + '</td><td>' + book.isbn + '</td><td>' +
+                            book.author + '</td></tr>');
+                    })
+                }
+            });
+        })
+    });
+</script>
+
+</body>
+</html>
