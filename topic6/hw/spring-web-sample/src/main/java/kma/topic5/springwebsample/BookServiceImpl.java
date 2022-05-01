@@ -2,6 +2,7 @@ package kma.topic5.springwebsample;
 
 import lombok.AllArgsConstructor;
 import org.assertj.core.util.Lists;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
