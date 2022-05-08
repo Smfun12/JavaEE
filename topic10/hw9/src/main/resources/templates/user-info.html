@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Info</title>
+</head>
+<body>
+Wish List
+<div>
+    <ul th:each="book: ${books}">
+        <li>
+        <span th:text="'id=' + ${book.id}"></span>
+        <span th:text="'title=' + ${book.title}"></span>
+        <span th:text="'isbn=' + ${book.isbn}"></span>
+        <span th:text="'author=' + ${book.author}"></span>
+        <a th:href="@{'/book/wishlist/delete/' + ${book.id}}">Remove</a></span>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

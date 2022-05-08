@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+</head>
+<body>
+<div id="errors-list">
+</div>
+<form action="/user/add" method="post" id="regForm">
+    <input type="text" name="login" id="login" placeholder="Enter login">
+    <input type="password" name="password" id="password" placeholder="password">
+    <input type="submit" id="registerUser">
+</form>
+<div id="successResponse"></div>
+<script>
+    $(function () {
+      $("#registerUser").click(function (e){
+          e.preventDefault();
+          let login = $('#login').val();
+          let password = $('#password').val();
+          $.ajax({
+              type: 'POST',
+              url: '/user/add',
+              data: "login="+login+"&password="+password,
+              success: function (response){
+                  $('#errors-list').empty();
+                  $('#regForm').empty();
+                  $('#successResponse').append('<a href="/login">'+ 'Login page' + '</a>');
+              },
+              error: function (response){
+                  $('#errors-list').empty();
+                  let readJSON = response.responseJSON;
+                  readJSON.forEach(function (error){
+                      $('#errors-list').append(error).append("<br>");
+                  })
+              }
+
+          })
+      })
+    })
+</script>
+</body>
+</html>
